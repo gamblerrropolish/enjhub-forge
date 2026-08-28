@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { voteProduct } from "@/lib/secure.functions";
 import { PriceTags, QualityBadges } from "@/components/PriceTags";
 import type { Product } from "@/lib/store";
 
@@ -22,10 +22,7 @@ export function ProductCard({
     const next = kind === "likes" ? likes + 1 : dislikes + 1;
     if (kind === "likes") setLikes(next);
     else setDislikes(next);
-    await supabase
-      .from("products")
-      .update(kind === "likes" ? { likes: next } : { dislikes: next })
-      .eq("id", product.id);
+    await voteProduct({ data: { productId: product.id, kind } }).catch(() => null);
   };
 
   return (

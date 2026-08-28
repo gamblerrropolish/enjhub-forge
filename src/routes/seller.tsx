@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { panelDb} from "@/lib/panelDb";
+import { panelDb } from "@/lib/panelDb";
+import { clearPanelToken, getPanelToken, setPanelToken } from "@/lib/panelToken";
 import { sellerLogin } from "@/lib/secure.functions";
 import { ProductCard } from "@/components/ProductCard";
 import { ImageUploader } from "@/components/ImageUploader";
@@ -46,7 +47,7 @@ function SellerPage() {
 
   useEffect(() => {
     const saved = safeStorage.get("pkmr_seller");
-    if (saved) setSellerId(saved);
+    if (saved && getPanelToken()) setSellerId(saved);
   }, []);
 
   const seller = (sellers ?? []).find((s) => s.id === sellerId) ?? null;
@@ -60,6 +61,7 @@ function SellerPage() {
       setErr("Nieprawidłowe dane logowania.");
       return;
     }
+    if ("token" in res) setPanelToken(res.token);
     safeStorage.set("pkmr_seller", res.sellerId);
     setSellerId(res.sellerId);
   };
@@ -109,6 +111,7 @@ function SellerPage() {
         <button
           className={btnGhost}
           onClick={() => {
+            clearPanelToken();
             safeStorage.remove("pkmr_seller");
             setSellerId(null);
           }}

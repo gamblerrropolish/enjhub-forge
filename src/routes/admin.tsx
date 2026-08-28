@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { panelDb} from "@/lib/panelDb";
+import { panelDb } from "@/lib/panelDb";
+import { adminLogin } from "@/lib/secure.functions";
+import { clearPanelToken, getPanelToken, setPanelToken } from "@/lib/panelToken";
 import { convertLink, extractSourceLink } from "@/lib/linkConverter";
 import { ProductCard } from "@/components/ProductCard";
 import { ImageUploader } from "@/components/ImageUploader";
@@ -77,18 +79,21 @@ function AdminPage() {
   const { data: settings } = useSettings();
 
   useEffect(() => {
-    if (safeStorage.get("pkmr_admin") === "1") setAuthed(true);
+    if (safeStorage.get("pkmr_admin") === "1" && getPanelToken()) setAuthed(true);
   }, []);
 
   const login = async () => {
     setErr("");
-    const expectedUser = settings?.["admin_username"] || DEFAULT_ADMIN_USER;
-    const expectedHash = settings?.["admin_password_hash"] || DEFAULT_ADMIN_HASH;
-    const hash = await sha256Hex(pass);
-    if (user.trim() === expectedUser && hash === expectedHash) {
-      safeStorage.set("pkmr_admin", "1");
-      setAuthed(true);
-    } else setErr("Nieprawidłowe dane logowania.");
+    const res = await adminLogin({
+      data: { username: user.trim(), passwordHash: await sha256Hex(pass) },
+    }).catch(() => ({ ok: false as const }));
+    if (!res.ok || !("token" in res)) {
+      setErr("Nieprawidłowe dane logowania.");
+      return;
+    }
+    setPanelToken(res.token);
+    safeStorage.set("pkmr_admin", "1");
+    setAuthed(true);
   };
 
   if (!authed) {
@@ -152,6 +157,7 @@ function AdminPage() {
         <button
           className={btnGhost}
           onClick={() => {
+            clearPanelToken();
             safeStorage.remove("pkmr_admin");
             setAuthed(false);
           }}
