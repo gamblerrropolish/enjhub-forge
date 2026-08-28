@@ -110,8 +110,13 @@ export const secureMutate = createServerFn({ method: "POST" })
     if (!session) return { error: "Unauthorized" };
 
     if (session.role === "seller") {
-      // Sellers may only manage their own products.
-      if (data.table !== "products" || !session.sellerId) return { error: "Unauthorized" };
+      // Sellers may only manage their own products and their own store row.
+      if (!session.sellerId) return { error: "Unauthorized" };
+      if (data.table === "sellers") {
+        if (data.op !== "update" || data.id !== session.sellerId) return { error: "Unauthorized" };
+      } else if (data.table !== "products") {
+        return { error: "Unauthorized" };
+      }
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -127,6 +132,11 @@ export const secureMutate = createServerFn({ method: "POST" })
 
     const scopeValues = (values: unknown) => {
       if (session.role !== "seller") return values;
+      if (data.table === "sellers") {
+        const { password_hash: _p, username: _u, active: _a, ...rest } =
+          (values ?? {}) as Record<string, unknown>;
+        return rest;
+      }
       const apply = (v: Record<string, unknown>) => ({ ...v, seller_id: session.sellerId });
       return Array.isArray(values)
         ? values.map((v) => apply(v as Record<string, unknown>))
