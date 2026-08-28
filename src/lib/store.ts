@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getPanelToken } from "@/lib/panelToken";
 import { uploadImage } from "@/lib/secure.functions";
 
 export type Agent = {
@@ -146,6 +147,7 @@ export async function uploadImages(files: File[], folder = "uploads"): Promise<s
     }
     const { url } = await uploadImage({
       data: {
+        token: getPanelToken(),
         folder,
         ext,
         contentType: file.type || "image/jpeg",
