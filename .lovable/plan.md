@@ -17,7 +17,20 @@ Przełącznik języka jest wspólny dla telefonu i desktopu — używa emoji fla
 
 Rozwiązanie: zamiast emoji użyć małych ikon flag rysowanych w SVG (prostokąty biało-czerwony i Union Jack) obok tekstu PL/EN. Renderują się identycznie na każdym systemie — telefon i PC.
 
+## 3. Odświeżenie wyglądu panelu admina
+
+Panel działa, ale wygląda surowo — same szare karty i pola jedno pod drugim.
+
+- **Ekran logowania**: wyśrodkowana karta z logo/gradientowym nagłówkiem, ikonami w polach i wyraźnym przyciskiem.
+- **Nagłówek panelu**: pasek z gradientowym tytułem, informacją kto jest zalogowany i przyciskami (podgląd strony, wyloguj) w spójnym stylu.
+- **Zakładki**: zamiast rzędu zwykłych guzików — czytelny pasek zakładek z ikoną, aktywną zakładką na gradiencie i licznikiem pozycji (np. liczba produktów, sprzedawców).
+- **Sekcje/karty**: jednolite karty z nagłówkiem, obramowaniem i delikatną poświatą; pola formularzy z etykietami i jednakową wysokością, przyciski akcji w jednym stylu (główny gradientowy, drugorzędny konturowy, usuwanie w kolorze ostrzegawczym).
+- **Listy** (produkty, sprzedawcy, promocje, linki): siatka kart z miniaturą i akcjami zamiast gęstych wierszy, plus komunikat gdy lista jest pusta.
+- **Responsywność**: sensowne układy na węższych ekranach; bez zmian w logice zapisu/uprawnieniach.
+
 ## Szczegóły techniczne
 - `src/components/OutfitGenerator.tsx` — rozszerzenie `SLOTS` o `jacket`, stan `jacketOn`, warunkowe renderowanie kafelka i liczenie sumy.
 - `src/lib/i18n.tsx` — nowe klucze `outfit.jacket`, `outfit.addJacket`, `outfit.removeJacket`.
 - `src/components/Header.tsx` — komponent `FlagIcon` z inline SVG w `LanguageSwitcher`.
+- `src/routes/admin.tsx` — wyłącznie warstwa prezentacji (klasy Tailwind, drobne komponenty pomocnicze `Card`/`Field`/`TabButton`); logika i wywołania `secureMutate` bez zmian.
+
