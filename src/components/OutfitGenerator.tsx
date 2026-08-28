@@ -88,8 +88,8 @@ export function OutfitGenerator({
 
   const addJacket = () => {
     setJacketOn(true);
-    setOutfit((o) => ({ ...o, jacket: randomOf(jacketPool) }));
   };
+
 
   const removeJacket = () => {
     setJacketOn(false);
