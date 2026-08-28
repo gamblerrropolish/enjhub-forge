@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -95,164 +95,45 @@ export type Database = {
       products: {
         Row: {
           agent_links: Json
-          batch: string
           category: string
           created_at: string
           dislikes: number
-          display_order: number
-          for_women: boolean
           id: string
           image_url: string | null
-          images: string[]
           likes: number
           price: number
-          price_cny: number
-          promoted: boolean
           qc_url: string | null
           quality: string
-          seller_id: string | null
-          sizes: string[]
-          store_name: string
-          store_url: string
-          tiktok_url: string | null
           title: string
           views: number
         }
         Insert: {
           agent_links?: Json
-          batch?: string
           category?: string
           created_at?: string
           dislikes?: number
-          display_order?: number
-          for_women?: boolean
           id?: string
           image_url?: string | null
-          images?: string[]
           likes?: number
           price?: number
-          price_cny?: number
-          promoted?: boolean
           qc_url?: string | null
           quality?: string
-          seller_id?: string | null
-          sizes?: string[]
-          store_name?: string
-          store_url?: string
-          tiktok_url?: string | null
           title: string
           views?: number
         }
         Update: {
           agent_links?: Json
-          batch?: string
           category?: string
           created_at?: string
           dislikes?: number
-          display_order?: number
-          for_women?: boolean
           id?: string
           image_url?: string | null
-          images?: string[]
           likes?: number
           price?: number
-          price_cny?: number
-          promoted?: boolean
           qc_url?: string | null
           quality?: string
-          seller_id?: string | null
-          sizes?: string[]
-          store_name?: string
-          store_url?: string
-          tiktok_url?: string | null
           title?: string
           views?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "products_seller_id_fkey"
-            columns: ["seller_id"]
-            isOneToOne: false
-            referencedRelation: "sellers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      promos: {
-        Row: {
-          created_at: string
-          description: string
-          id: string
-          image_url: string | null
-          link_url: string
-          sort_order: number
-          title: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string
-          id?: string
-          image_url?: string | null
-          link_url?: string
-          sort_order?: number
-          title: string
-        }
-        Update: {
-          created_at?: string
-          description?: string
-          id?: string
-          image_url?: string | null
-          link_url?: string
-          sort_order?: number
-          title?: string
-        }
-        Relationships: []
-      }
-      sellers: {
-        Row: {
-          active: boolean
-          banner_url: string | null
-          created_at: string
-          description: string
-          external_url: string
-          id: string
-          link_mode: string
-          logo_url: string | null
-          name: string
-          password_hash: string
-          slug: string
-          updated_at: string
-          username: string
-        }
-        Insert: {
-          active?: boolean
-          banner_url?: string | null
-          created_at?: string
-          description?: string
-          external_url?: string
-          id?: string
-          link_mode?: string
-          logo_url?: string | null
-          name: string
-          password_hash?: string
-          slug: string
-          updated_at?: string
-          username: string
-        }
-        Update: {
-          active?: boolean
-          banner_url?: string | null
-          created_at?: string
-          description?: string
-          external_url?: string
-          id?: string
-          link_mode?: string
-          logo_url?: string | null
-          name?: string
-          password_hash?: string
-          slug?: string
-          updated_at?: string
-          username?: string
         }
         Relationships: []
       }
@@ -268,81 +149,6 @@ export type Database = {
         Update: {
           key?: string
           value?: string
-        }
-        Relationships: []
-      }
-      shipping_rates: {
-        Row: {
-          agent_name: string
-          base_price: number
-          coupon_code: string
-          created_at: string
-          discount_percent: number
-          id: string
-          line_name: string
-          max_weight: number
-          min_weight: number
-          price_per_kg: number
-          price_table: Json
-          sort_order: number
-        }
-        Insert: {
-          agent_name: string
-          base_price?: number
-          coupon_code?: string
-          created_at?: string
-          discount_percent?: number
-          id?: string
-          line_name?: string
-          max_weight?: number
-          min_weight?: number
-          price_per_kg?: number
-          price_table?: Json
-          sort_order?: number
-        }
-        Update: {
-          agent_name?: string
-          base_price?: number
-          coupon_code?: string
-          created_at?: string
-          discount_percent?: number
-          id?: string
-          line_name?: string
-          max_weight?: number
-          min_weight?: number
-          price_per_kg?: number
-          price_table?: Json
-          sort_order?: number
-        }
-        Relationships: []
-      }
-      social_links: {
-        Row: {
-          created_at: string
-          icon: string
-          id: string
-          image_url: string | null
-          label: string
-          sort_order: number
-          url: string
-        }
-        Insert: {
-          created_at?: string
-          icon?: string
-          id?: string
-          image_url?: string | null
-          label: string
-          sort_order?: number
-          url?: string
-        }
-        Update: {
-          created_at?: string
-          icon?: string
-          id?: string
-          image_url?: string | null
-          label?: string
-          sort_order?: number
-          url?: string
         }
         Relationships: []
       }
