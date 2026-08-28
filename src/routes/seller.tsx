@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { panelDb} from "@/lib/panelDb";
 import { sellerLogin } from "@/lib/secure.functions";
 import { ProductCard } from "@/components/ProductCard";
 import { ImageUploader } from "@/components/ImageUploader";
@@ -211,7 +211,7 @@ function StoreBranding({ seller }: { seller: Seller }) {
         className={`${btn} mt-5`}
         onClick={async () => {
           const slug = form.slug.trim().toLowerCase().replace(/\s+/g, "-");
-          const { error } = await supabase
+          const { error } = await panelDb
             .from("sellers")
             .update({ ...form, slug })
             .eq("id", seller.id);
@@ -269,8 +269,8 @@ function SellerProducts({ seller }: { seller: Seller }) {
       store_name: form.store_name,
       seller_id: seller.id,
     };
-    if (form.id) await supabase.from("products").update(payload).eq("id", form.id);
-    else await supabase.from("products").insert(payload);
+    if (form.id) await panelDb.from("products").update(payload).eq("id", form.id);
+    else await panelDb.from("products").insert(payload);
     setForm(empty);
     await refresh("products");
   };
@@ -456,7 +456,7 @@ function SellerProducts({ seller }: { seller: Seller }) {
                 className={btnGhost}
                 aria-label="W górę"
                 onClick={async () => {
-                  await supabase
+                  await panelDb
                     .from("products")
                     .update({ display_order: (p.display_order ?? 0) - 1 })
                     .eq("id", p.id);
@@ -469,7 +469,7 @@ function SellerProducts({ seller }: { seller: Seller }) {
                 className={btnGhost}
                 aria-label="W dół"
                 onClick={async () => {
-                  await supabase
+                  await panelDb
                     .from("products")
                     .update({ display_order: (p.display_order ?? 0) + 1 })
                     .eq("id", p.id);
@@ -504,7 +504,7 @@ function SellerProducts({ seller }: { seller: Seller }) {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("products").delete().eq("id", p.id);
+                  await panelDb.from("products").delete().eq("id", p.id);
                   await refresh("products");
                 }}
               >

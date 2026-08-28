@@ -268,8 +268,9 @@ export function useRefresh() {
 }
 
 export async function saveSetting(key: string, value: string) {
-  const { error } = await supabase.from("settings").upsert({ key, value });
-  if (error) throw error;
+  const { panelDb } = await import("@/lib/panelDb");
+  const { error } = await panelDb.from("settings").upsert({ key, value });
+  if (error) throw new Error(error);
 }
 
 /** Parse a comma-separated string into a clean list of values. */
