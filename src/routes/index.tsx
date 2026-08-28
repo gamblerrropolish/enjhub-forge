@@ -163,28 +163,35 @@ function Index() {
           />
         </label>
         <div className="flex flex-wrap items-center gap-2">
-          <label
-            className={`flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold uppercase tracking-wide transition-colors ${bestOnly ? "border-primary text-primary glow-ring" : "border-border text-muted-foreground hover:border-primary"}`}
+          <button
+            type="button"
+            aria-pressed={bestOnly}
+            onClick={() => setBestOnly(!bestOnly)}
+            className={`group flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-extrabold uppercase tracking-wide transition-all active:scale-95 ${bestOnly ? "gradient-brand border-transparent text-surface-deep glow-ring" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
           >
-            <input
-              type="checkbox"
-              checked={bestOnly}
-              onChange={(e) => setBestOnly(e.target.checked)}
-              className="accent-primary"
-            />
-            {t("finder.bestOnly", "Best batch only")} ({bestCount})
-          </label>
-          <label
-            className={`flex cursor-pointer items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold uppercase tracking-wide transition-colors ${girlOnly ? "border-primary text-primary glow-ring" : "border-border text-muted-foreground hover:border-primary"}`}
+            <span className="text-sm leading-none">🔥</span>
+            {t("finder.bestOnly", "Best batch only")}
+            <span
+              className={`rounded-md px-1.5 py-0.5 text-[10px] font-black ${bestOnly ? "bg-surface-deep/20" : "bg-secondary"}`}
+            >
+              {bestCount}
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={girlOnly}
+            onClick={() => setGirlOnly(!girlOnly)}
+            className={`group flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-extrabold uppercase tracking-wide transition-all active:scale-95 ${girlOnly ? "gradient-brand border-transparent text-surface-deep glow-ring" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
           >
-            <input
-              type="checkbox"
-              checked={girlOnly}
-              onChange={(e) => setGirlOnly(e.target.checked)}
-              className="accent-primary"
-            />
-            👛 {t("finder.girlZone", "Girl Zone")} ({girlCount})
-          </label>
+            <span className="text-sm leading-none">👛</span>
+            {t("finder.girlZone", "Girl Zone")}
+            <span
+              className={`rounded-md px-1.5 py-0.5 text-[10px] font-black ${girlOnly ? "bg-surface-deep/20" : "bg-secondary"}`}
+            >
+              {girlCount}
+            </span>
+          </button>
+
           <button
             onClick={() => {
               setQ("");
