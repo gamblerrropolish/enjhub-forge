@@ -155,6 +155,20 @@ export const secureMutate = createServerFn({ method: "POST" })
     return { error: error ? "Operation failed" : null };
   });
 
+/** Admin-only: seller usernames (never password hashes) for the management UI. */
+export const adminSellerUsernames = createServerFn({ method: "POST" })
+  .inputValidator((data: { token: string }) => ({ token: cleanToken(data?.token) }))
+  .handler(async ({ data }) => {
+    const { verifyToken } = await import("@/lib/session.server");
+    const session = verifyToken(data.token);
+    if (!session || session.role !== "admin") return { usernames: {} as Record<string, string> };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows } = await supabaseAdmin.from("sellers").select("id, username");
+    return {
+      usernames: Object.fromEntries((rows ?? []).map((r) => [r.id, r.username])) as Record<string, string>,
+    };
+  });
+
 /** Public, rate-shaped engagement vote — increments a counter server-side. */
 export const voteProduct = createServerFn({ method: "POST" })
   .inputValidator((data: { productId: string; kind: "likes" | "dislikes" }) => {

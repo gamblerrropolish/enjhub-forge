@@ -102,7 +102,7 @@ export type Seller = {
   id: string;
   name: string;
   slug: string;
-  username: string;
+  username?: string;
   logo_url: string | null;
   banner_url: string | null;
   description: string;
@@ -123,7 +123,7 @@ export type GuideStep = {
 export type Settings = Record<string, string>;
 
 const SELLER_COLUMNS =
-  "id, name, slug, username, logo_url, banner_url, description, active, external_url, link_mode";
+  "id, name, slug, logo_url, banner_url, description, active, external_url, link_mode";
 
 export const useSellers = () =>
   useQuery({

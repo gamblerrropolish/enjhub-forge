@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 import { panelDb } from "@/lib/panelDb";
-import { adminLogin } from "@/lib/secure.functions";
+import { adminLogin, adminSellerUsernames } from "@/lib/secure.functions";
 import { clearPanelToken, getPanelToken, setPanelToken } from "@/lib/panelToken";
 import { convertLink, extractSourceLink } from "@/lib/linkConverter";
 import { ProductCard } from "@/components/ProductCard";
@@ -1573,6 +1573,12 @@ function ProductsTab() {
 
 function SellersTab() {
   const { data: sellers } = useSellers();
+  const [usernames, setUsernames] = useState<Record<string, string>>({});
+  useEffect(() => {
+    adminSellerUsernames({ data: { token: getPanelToken() } })
+      .then((r) => setUsernames(r.usernames))
+      .catch(() => setUsernames({}));
+  }, [sellers]);
   const { data: products } = useProducts();
   const refresh = useRefresh();
   const empty = {
@@ -1722,7 +1728,7 @@ function SellersTab() {
                     id: s.id,
                     name: s.name,
                     slug: s.slug,
-                    username: s.username,
+                    username: usernames[s.id] ?? "",
                     password: "",
                     logo_url: s.logo_url ?? "",
                     banner_url: s.banner_url ?? "",
