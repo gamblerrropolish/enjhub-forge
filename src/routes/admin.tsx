@@ -98,82 +98,123 @@ function AdminPage() {
 
   if (!authed) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="relative flex min-h-screen items-center justify-center p-4">
+        <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(600px_circle_at_50%_20%,color-mix(in_oklab,var(--primary)_25%,transparent),transparent_70%)]" />
         <form
           onSubmit={(e) => {
             e.preventDefault();
             void login();
           }}
-          className="w-full max-w-sm space-y-4 rounded-2xl border border-border bg-surface p-8 glow-ring"
+          className="relative w-full max-w-sm space-y-5 rounded-3xl border border-primary/40 bg-surface/95 p-8 shadow-2xl glow-ring backdrop-blur"
         >
-          <h1 className="text-xl font-black">Panel administratora</h1>
-          <input
-            className={input}
-            placeholder="Login"
-            autoCapitalize="none"
-            autoCorrect="off"
-            autoComplete="username"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-          />
-          <input
-            className={input}
-            type="password"
-            placeholder="Hasło"
-            autoComplete="current-password"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-          />
-          {err ? <p className="text-xs text-destructive">{err}</p> : null}
-          <button className={`${btn} w-full`}>Zaloguj</button>
+          <div className="text-center">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl gradient-brand text-2xl">
+              🔐
+            </div>
+            <h1 className="text-xl font-black text-gradient-brand">Panel administratora</h1>
+            <p className="mt-1 text-xs text-muted-foreground">Zaloguj się, aby zarządzać stroną</p>
+          </div>
+          <label className="block space-y-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+              Login
+            </span>
+            <input
+              className={input}
+              placeholder="Login"
+              autoCapitalize="none"
+              autoCorrect="off"
+              autoComplete="username"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+            />
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+              Hasło
+            </span>
+            <input
+              className={input}
+              type="password"
+              placeholder="••••••••"
+              autoComplete="current-password"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+            />
+          </label>
+          {err ? (
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              {err}
+            </p>
+          ) : null}
+          <button className={`${btn} w-full py-3`}>Zaloguj</button>
+          <Link
+            to="/"
+            className="block text-center text-[11px] font-semibold text-muted-foreground hover:text-primary"
+          >
+            ← Powrót do strony
+          </Link>
         </form>
       </div>
     );
   }
 
   const tabs = [
-    ["branding", "Branding"],
-    ["promos", "Promocje"],
-    ["agents", "Agenci"],
-    ["categories", "Kategorie"],
-    ["products", "Produkty"],
-    ["import", "Import CSV"],
-    ["sellers", "Sprzedawcy"],
-    ["shipping", "Wysyłki"],
-    ["guide", "Poradnik"],
-    ["lang", "Języki"],
-    ["security", "Bezpieczeństwo"],
-
+    ["branding", "Branding", "🎨"],
+    ["promos", "Promocje", "🔥"],
+    ["agents", "Agenci", "🤝"],
+    ["categories", "Kategorie", "🗂️"],
+    ["products", "Produkty", "👟"],
+    ["import", "Import CSV", "📥"],
+    ["sellers", "Sprzedawcy", "🏪"],
+    ["shipping", "Wysyłki", "📦"],
+    ["guide", "Poradnik", "📘"],
+    ["lang", "Języki", "🌍"],
+    ["security", "Bezpieczeństwo", "🛡️"],
   ] as const;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-gradient-brand">Panel administratora</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-surface/80 p-5 glow-ring">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl gradient-brand text-xl text-surface-deep">
+            ⚙️
+          </div>
+          <div>
+            <h1 className="text-2xl font-black text-gradient-brand">Panel administratora</h1>
+            <p className="text-[11px] text-muted-foreground">
+              Zarządzaj produktami, sprzedawcami i wyglądem strony
+            </p>
+          </div>
+        </div>
         <div className="flex gap-2">
-        <Link to="/" className={btnGhost}>
-          ← Powrót do strony
-        </Link>
-        <button
-          className={btnGhost}
-          onClick={() => {
-            clearPanelToken();
-            safeStorage.remove("pkmr_admin");
-            setAuthed(false);
-          }}
-        >
-          Wyloguj
-        </button>
+          <Link to="/" className={btnGhost}>
+            ← Podgląd strony
+          </Link>
+          <button
+            className={btnGhost}
+            onClick={() => {
+              clearPanelToken();
+              safeStorage.remove("pkmr_admin");
+              setAuthed(false);
+            }}
+          >
+            Wyloguj
+          </button>
         </div>
       </div>
 
-      <div className="my-6 flex flex-wrap gap-2">
-        {tabs.map(([k, label]) => (
+      <div className="my-6 flex flex-wrap gap-2 rounded-2xl border border-border bg-secondary/30 p-2">
+        {tabs.map(([k, label, icon]) => (
           <button
             key={k}
             onClick={() => setTab(k)}
-            className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${tab === k ? "border-primary text-primary glow-ring" : "border-border text-muted-foreground"}`}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+              tab === k
+                ? "gradient-brand text-surface-deep shadow-lg"
+                : "text-muted-foreground hover:bg-surface hover:text-foreground"
+            }`}
           >
+            <span aria-hidden="true">{icon}</span>
             {label}
           </button>
         ))}
@@ -195,6 +236,7 @@ function AdminPage() {
   );
 }
 
+
 const settingFields: [string, string][] = [
   ["agent_logo_url", "Logo agenta (URL)"],
   ["primary_agent_url", "Główny link rejestracyjny"],
@@ -212,7 +254,7 @@ function BrandingTab() {
   }, [data]);
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-4 text-lg font-bold">Branding</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Social media dodajesz wyłącznie poniżej w „Socialne (dynamiczne)” — nic nie pojawia się tam
@@ -464,7 +506,7 @@ function PromosTab() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">
             {form.id ? "Edytuj promocję" : "Dodaj promocję / ogłoszenie sklepu"}
           </h2>
@@ -507,7 +549,7 @@ function PromosTab() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">Promocje</h2>
           <ul className="space-y-2">
             {(promos ?? []).map((pr) => (
@@ -582,7 +624,7 @@ function ShippingTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-1 text-lg font-bold">
           {form.id ? "Edytuj linię wysyłkową" : "Dodaj linię wysyłkową"}
         </h2>
@@ -744,7 +786,7 @@ function ShippingTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Stawki wysyłek</h2>
         <ul className="space-y-2">
           {(rates ?? []).map((r) => (
@@ -822,7 +864,7 @@ function AgentsTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">{form.id ? "Edytuj agenta" : "Dodaj agenta"}</h2>
         <div className="space-y-3">
           <input
@@ -874,7 +916,7 @@ function AgentsTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Agenci</h2>
         <ul className="space-y-2">
           {(agents ?? []).map((a) => (
@@ -937,7 +979,7 @@ function CategoriesTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-4 text-lg font-bold">Zarządzanie kategoriami</h2>
       <div className="flex gap-2">
         <input
@@ -1184,7 +1226,7 @@ function ProductsTab() {
   return (
     <section className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">
             {form.id ? "Edytuj produkt" : "Dodaj produkt"}
           </h2>
@@ -1431,13 +1473,13 @@ function ProductsTab() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">Podgląd na żywo</h2>
           <ProductCard product={preview} />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-1 text-lg font-bold">Wszystkie produkty</h2>
         <p className="mb-3 text-xs text-muted-foreground">
           Przeciągnij kafelek myszką (uchwyt ⠿), aby zmienić kolejność — zapisuje się od razu.
@@ -1622,7 +1664,7 @@ function SellersTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">
           {form.id ? "Edytuj sprzedawcę" : "Dodaj sprzedawcę"}
         </h2>
@@ -1703,7 +1745,7 @@ function SellersTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Sprzedawcy</h2>
         <ul className="space-y-2">
           {(sellers ?? []).map((s) => (
@@ -1774,7 +1816,7 @@ function GuideTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">{form.id ? "Edytuj krok" : "Dodaj krok"}</h2>
         <div className="space-y-3">
           <input
@@ -1823,7 +1865,7 @@ function GuideTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Kroki poradnika</h2>
         <ul className="space-y-2">
           {(steps ?? []).map((s) => (
@@ -2018,7 +2060,7 @@ function LangTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-1 text-lg font-bold">Języki (PL / EN)</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Ustaw własne teksty dla obu wersji językowych — nagłówki, nawigacja i nazwy kategorii.
@@ -2113,7 +2155,7 @@ function ImportTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-1 text-lg font-bold">Szybki import produktów</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Kolumny (nagłówek pierwszego wiersza): <b>title, category, price, price_cny, image_url,
