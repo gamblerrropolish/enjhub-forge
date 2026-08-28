@@ -214,20 +214,6 @@ export function OutfitGenerator({
             </div>
           );
         })}
-
-        {!jacketOn ? (
-          <button
-            onClick={addJacket}
-            disabled={jacketPool.length === 0}
-            className="flex min-h-[180px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/50 bg-secondary/20 p-4 text-primary transition-colors hover:bg-primary/10 disabled:opacity-40"
-          >
-            <span className="text-3xl">🧥</span>
-            <span className="text-2xl font-black leading-none">+</span>
-            <span className="text-[11px] font-bold uppercase tracking-wide">
-              {t("outfit.jacket")}
-            </span>
-          </button>
-        ) : null}
       </div>
 
       {hasResult ? (
