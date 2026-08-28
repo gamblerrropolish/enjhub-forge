@@ -3,16 +3,23 @@ import { PriceTags, QualityBadges } from "@/components/PriceTags";
 import { cnyFromPln, money, usdFromPln, type Agent, type Product } from "@/lib/store";
 import { useLang } from "@/lib/i18n";
 
-type SlotKey = "shoes" | "bottoms" | "tops" | "acc";
+type SlotKey = "shoes" | "bottoms" | "tops" | "jacket" | "acc";
 
-const SLOTS: { key: SlotKey; label: string; match: string[] }[] = [
+type Slot = { key: SlotKey; label: string; match: string[] };
+
+const ALL_SLOTS: Slot[] = [
   { key: "shoes", label: "Buty", match: ["but", "shoe", "sneak"] },
   { key: "bottoms", label: "Spodnie", match: ["spodni", "bottom", "pant", "short", "jean"] },
-  { key: "tops", label: "Koszulka / Bluza", match: ["koszul", "bluz", "top", "hood", "tee", "kurtk", "jacket"] },
+  { key: "tops", label: "Koszulka / Bluza", match: ["koszul", "bluz", "top", "hood", "tee"] },
+  {
+    key: "jacket",
+    label: "Kurtka",
+    match: ["kurtk", "jacket", "coat", "puffer", "parka", "płaszcz", "plaszcz"],
+  },
   { key: "acc", label: "Czapka / Akcesoria", match: ["czap", "akces", "head", "cap", "hat", "zegar", "accessor"] },
 ];
 
-function pickPool(products: Product[], slot: (typeof SLOTS)[number]) {
+function pickPool(products: Product[], slot: Slot) {
   return products.filter((p) => {
     const c = (p.category || "").toLowerCase();
     return slot.match.some((m) => c.includes(m));
@@ -36,25 +43,35 @@ export function OutfitGenerator({
   onDetails?: (p: Product) => void;
 }) {
   const { t } = useLang();
+  const [jacketOn, setJacketOn] = useState(false);
   const pools = useMemo(
-    () => SLOTS.map((slot) => ({ slot, items: pickPool(products, slot) })),
+    () => ALL_SLOTS.map((slot) => ({ slot, items: pickPool(products, slot) })),
     [products],
   );
+  const slots = useMemo(
+    () => ALL_SLOTS.filter((s) => s.key !== "jacket" || jacketOn),
+    [jacketOn],
+  );
+  const jacketPool = pools.find((p) => p.slot.key === "jacket")?.items ?? [];
+
   const [outfit, setOutfit] = useState<Partial<Record<SlotKey, Product | null>>>({});
   const [spinning, setSpinning] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const total = SLOTS.reduce((sum, s) => sum + Number(outfit[s.key]?.price ?? 0), 0);
-  const hasResult = SLOTS.some((s) => outfit[s.key]);
+  const total = slots.reduce((sum, s) => sum + Number(outfit[s.key]?.price ?? 0), 0);
+  const hasResult = slots.some((s) => outfit[s.key]);
 
-  const rollAll = () => {
+  const rollAll = (withJacket = jacketOn) => {
     if (spinning) return;
     setSpinning(true);
     let ticks = 0;
     timer.current = setInterval(() => {
       ticks += 1;
       const next: Partial<Record<SlotKey, Product | null>> = {};
-      for (const { slot, items } of pools) next[slot.key] = randomOf(items);
+      for (const { slot, items } of pools) {
+        if (slot.key === "jacket" && !withJacket) continue;
+        next[slot.key] = randomOf(items);
+      }
       setOutfit(next);
       if (ticks >= 14) {
         if (timer.current) clearInterval(timer.current);
@@ -67,6 +84,16 @@ export function OutfitGenerator({
     const entry = pools.find((p) => p.slot.key === key);
     if (!entry) return;
     setOutfit((o) => ({ ...o, [key]: randomOf(entry.items, o[key] ?? undefined) }));
+  };
+
+  const addJacket = () => {
+    setJacketOn(true);
+    setOutfit((o) => ({ ...o, jacket: randomOf(jacketPool) }));
+  };
+
+  const removeJacket = () => {
+    setJacketOn(false);
+    setOutfit((o) => ({ ...o, jacket: null }));
   };
 
   return (
@@ -84,17 +111,35 @@ export function OutfitGenerator({
             {t("outfit.desc")}
           </p>
         </div>
-        <button
-          onClick={rollAll}
-          disabled={spinning}
-          className="rounded-xl gradient-brand px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-surface-deep disabled:opacity-60"
-        >
-          {spinning ? t("outfit.rolling") : hasResult ? t("outfit.rollAgain") : t("outfit.roll")}
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {jacketOn ? (
+            <button
+              onClick={removeJacket}
+              className="rounded-xl border border-border px-4 py-3 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:border-destructive hover:text-destructive"
+            >
+              🧥 {t("outfit.removeJacket")}
+            </button>
+          ) : (
+            <button
+              onClick={addJacket}
+              disabled={jacketPool.length === 0}
+              className="rounded-xl border border-primary/60 px-4 py-3 text-xs font-bold uppercase tracking-wide text-primary hover:bg-primary/10 disabled:opacity-40"
+            >
+              🧥 {t("outfit.addJacket")}
+            </button>
+          )}
+          <button
+            onClick={() => rollAll()}
+            disabled={spinning}
+            className="rounded-xl gradient-brand px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-surface-deep disabled:opacity-60"
+          >
+            {spinning ? t("outfit.rolling") : hasResult ? t("outfit.rollAgain") : t("outfit.roll")}
+          </button>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {SLOTS.map((slot) => {
+        {slots.map((slot) => {
           const item = outfit[slot.key] ?? null;
           const empty = pools.find((p) => p.slot.key === slot.key)?.items.length === 0;
           return (
@@ -102,8 +147,17 @@ export function OutfitGenerator({
               key={slot.key}
               className={`overflow-hidden rounded-2xl border bg-secondary/40 transition-all ${spinning ? "border-primary/60 opacity-80" : "border-border"}`}
             >
-              <div className="border-b border-border px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-                {t(`outfit.${slot.key}`, slot.label)}
+              <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <span>{t(`outfit.${slot.key}`, slot.label)}</span>
+                {slot.key === "jacket" ? (
+                  <button
+                    onClick={removeJacket}
+                    aria-label={t("outfit.removeJacket")}
+                    className="rounded-md px-1 text-sm leading-none text-muted-foreground hover:text-destructive"
+                  >
+                    ×
+                  </button>
+                ) : null}
               </div>
               <div className="aspect-square overflow-hidden bg-secondary">
                 {item?.image_url ? (
@@ -144,6 +198,20 @@ export function OutfitGenerator({
             </div>
           );
         })}
+
+        {!jacketOn ? (
+          <button
+            onClick={addJacket}
+            disabled={jacketPool.length === 0}
+            className="flex min-h-[180px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/50 bg-secondary/20 p-4 text-primary transition-colors hover:bg-primary/10 disabled:opacity-40"
+          >
+            <span className="text-3xl">🧥</span>
+            <span className="text-2xl font-black leading-none">+</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide">
+              {t("outfit.jacket")}
+            </span>
+          </button>
+        ) : null}
       </div>
 
       {hasResult ? (
@@ -170,7 +238,7 @@ export function OutfitGenerator({
               </a>
             ))}
             <button
-              onClick={rollAll}
+              onClick={() => rollAll()}
               className="rounded-lg border border-border px-4 py-2 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:border-primary hover:text-primary"
             >
               Przelosuj wszystko
