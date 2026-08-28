@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { panelDb } from "@/lib/panelDb";
+import { adminLogin, adminSellerUsernames } from "@/lib/secure.functions";
+import { clearPanelToken, getPanelToken, setPanelToken } from "@/lib/panelToken";
 import { convertLink, extractSourceLink } from "@/lib/linkConverter";
 import { ProductCard } from "@/components/ProductCard";
 import { ImageUploader } from "@/components/ImageUploader";
@@ -77,18 +79,21 @@ function AdminPage() {
   const { data: settings } = useSettings();
 
   useEffect(() => {
-    if (safeStorage.get("pkmr_admin") === "1") setAuthed(true);
+    if (safeStorage.get("pkmr_admin") === "1" && getPanelToken()) setAuthed(true);
   }, []);
 
   const login = async () => {
     setErr("");
-    const expectedUser = settings?.["admin_username"] || DEFAULT_ADMIN_USER;
-    const expectedHash = settings?.["admin_password_hash"] || DEFAULT_ADMIN_HASH;
-    const hash = await sha256Hex(pass);
-    if (user.trim() === expectedUser && hash === expectedHash) {
-      safeStorage.set("pkmr_admin", "1");
-      setAuthed(true);
-    } else setErr("Nieprawidłowe dane logowania.");
+    const res = await adminLogin({
+      data: { username: user.trim(), passwordHash: await sha256Hex(pass) },
+    }).catch(() => ({ ok: false as const }));
+    if (!res.ok || !("token" in res)) {
+      setErr("Nieprawidłowe dane logowania.");
+      return;
+    }
+    setPanelToken(res.token);
+    safeStorage.set("pkmr_admin", "1");
+    setAuthed(true);
   };
 
   if (!authed) {
@@ -152,6 +157,7 @@ function AdminPage() {
         <button
           className={btnGhost}
           onClick={() => {
+            clearPanelToken();
             safeStorage.remove("pkmr_admin");
             setAuthed(false);
           }}
@@ -325,8 +331,8 @@ function SocialLinksManager() {
 
   const save = async () => {
     if (!form.label.trim()) return;
-    if (form.id) await supabase.from("social_links").update(form).eq("id", form.id);
-    else await supabase.from("social_links").insert(form);
+    if (form.id) await panelDb.from("social_links").update(form).eq("id", form.id);
+    else await panelDb.from("social_links").insert(form);
     setForm(empty);
     await refresh("social_links");
   };
@@ -415,7 +421,7 @@ function SocialLinksManager() {
             <button
               className="text-destructive"
               onClick={async () => {
-                await supabase.from("social_links").delete().eq("id", l.id);
+                await panelDb.from("social_links").delete().eq("id", l.id);
                 await refresh("social_links");
               }}
             >
@@ -438,8 +444,8 @@ function PromosTab() {
 
   const save = async () => {
     if (!form.title.trim()) return;
-    if (form.id) await supabase.from("promos").update(form).eq("id", form.id);
-    else await supabase.from("promos").insert(form);
+    if (form.id) await panelDb.from("promos").update(form).eq("id", form.id);
+    else await panelDb.from("promos").insert(form);
     setForm(empty);
     await refresh("promos");
   };
@@ -531,7 +537,7 @@ function PromosTab() {
                 <button
                   className={btnGhost}
                   onClick={async () => {
-                    await supabase.from("promos").delete().eq("id", pr.id);
+                    await panelDb.from("promos").delete().eq("id", pr.id);
                     await refresh("promos");
                   }}
                 >
@@ -568,8 +574,8 @@ function ShippingTab() {
 
   const save = async () => {
     if (!form.agent_name.trim()) return;
-    if (form.id) await supabase.from("shipping_rates").update(form).eq("id", form.id);
-    else await supabase.from("shipping_rates").insert(form);
+    if (form.id) await panelDb.from("shipping_rates").update(form).eq("id", form.id);
+    else await panelDb.from("shipping_rates").insert(form);
     setForm(empty);
     await refresh("shipping_rates");
   };
@@ -779,7 +785,7 @@ function ShippingTab() {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("shipping_rates").delete().eq("id", r.id);
+                  await panelDb.from("shipping_rates").delete().eq("id", r.id);
                   await refresh("shipping_rates");
                 }}
               >
@@ -803,8 +809,8 @@ function AgentsTab() {
 
   const save = async () => {
     if (!form.name) return;
-    if (form.id) await supabase.from("agents").update(form).eq("id", form.id);
-    else await supabase.from("agents").insert(form);
+    if (form.id) await panelDb.from("agents").update(form).eq("id", form.id);
+    else await panelDb.from("agents").insert(form);
     await saveSetting(`converter_${form.name.trim().toLowerCase()}`, template);
     setForm(empty);
     setTemplate("");
@@ -899,7 +905,7 @@ function AgentsTab() {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("agents").delete().eq("id", a.id);
+                  await panelDb.from("agents").delete().eq("id", a.id);
                   await refresh("agents");
                   await refresh("agents_raw");
                 }}
@@ -923,8 +929,8 @@ function CategoriesTab() {
   const save = async () => {
     if (!name.trim()) return;
     const slug = name.trim().toLowerCase().replace(/\s+/g, "-");
-    if (editId) await supabase.from("categories").update({ name, slug }).eq("id", editId);
-    else await supabase.from("categories").insert({ name, slug, sort_order: 99 });
+    if (editId) await panelDb.from("categories").update({ name, slug }).eq("id", editId);
+    else await panelDb.from("categories").insert({ name, slug, sort_order: 99 });
     setName("");
     setEditId(null);
     await refresh("categories");
@@ -963,7 +969,7 @@ function CategoriesTab() {
             <button
               className="text-destructive"
               onClick={async () => {
-                await supabase.from("categories").delete().eq("id", c.id);
+                await panelDb.from("categories").delete().eq("id", c.id);
                 await refresh("categories");
               }}
             >
@@ -1087,7 +1093,7 @@ function ProductsTab() {
     for (let i = lo; i <= hi; i++) {
       const p = list[i]!;
       if (p.display_order === i) continue;
-      await supabase.from("products").update({ display_order: i }).eq("id", p.id);
+      await panelDb.from("products").update({ display_order: i }).eq("id", p.id);
     }
     await refresh("products");
     setOrderIds(null);
@@ -1145,8 +1151,8 @@ function ProductsTab() {
       store_name: form.store_name,
       agent_links: agentLinks,
     };
-    if (form.id) await supabase.from("products").update(payload).eq("id", form.id);
-    else await supabase.from("products").insert(payload);
+    if (form.id) await panelDb.from("products").update(payload).eq("id", form.id);
+    else await panelDb.from("products").insert(payload);
     setForm(empty);
     await refresh("products");
   };
@@ -1487,7 +1493,7 @@ function ProductsTab() {
                 className={btnGhost}
                 aria-label="W górę"
                 onClick={async () => {
-                  await supabase
+                  await panelDb
                     .from("products")
                     .update({ display_order: (p.display_order ?? 0) - 1 })
                     .eq("id", p.id);
@@ -1500,7 +1506,7 @@ function ProductsTab() {
                 className={btnGhost}
                 aria-label="W dół"
                 onClick={async () => {
-                  await supabase
+                  await panelDb
                     .from("products")
                     .update({ display_order: (p.display_order ?? 0) + 1 })
                     .eq("id", p.id);
@@ -1542,7 +1548,7 @@ function ProductsTab() {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("products").delete().eq("id", p.id);
+                  await panelDb.from("products").delete().eq("id", p.id);
                   await refresh("products");
                 }}
               >
@@ -1567,6 +1573,12 @@ function ProductsTab() {
 
 function SellersTab() {
   const { data: sellers } = useSellers();
+  const [usernames, setUsernames] = useState<Record<string, string>>({});
+  useEffect(() => {
+    adminSellerUsernames({ data: { token: getPanelToken() } })
+      .then((r) => setUsernames(r.usernames))
+      .catch(() => setUsernames({}));
+  }, [sellers]);
   const { data: products } = useProducts();
   const refresh = useRefresh();
   const empty = {
@@ -1601,8 +1613,8 @@ function SellersTab() {
       ? { ...base, password_hash: await sha256Hex(form.password) }
       : base;
     const { error } = form.id
-      ? await supabase.from("sellers").update(withPass).eq("id", form.id)
-      : await supabase.from("sellers").insert(withPass);
+      ? await panelDb.from("sellers").update(withPass).eq("id", form.id)
+      : await panelDb.from("sellers").insert(withPass);
     setMsg(error ? "Nie udało się zapisać sprzedawcy." : "Zapisano.");
     if (!error) setForm(empty);
     await refresh("sellers");
@@ -1716,7 +1728,7 @@ function SellersTab() {
                     id: s.id,
                     name: s.name,
                     slug: s.slug,
-                    username: s.username,
+                    username: usernames[s.id] ?? "",
                     password: "",
                     logo_url: s.logo_url ?? "",
                     banner_url: s.banner_url ?? "",
@@ -1731,7 +1743,7 @@ function SellersTab() {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("sellers").delete().eq("id", s.id);
+                  await panelDb.from("sellers").delete().eq("id", s.id);
                   await refresh("sellers");
                   await refresh("products");
                 }}
@@ -1754,8 +1766,8 @@ function GuideTab() {
 
   const save = async () => {
     if (!form.title) return;
-    if (form.id) await supabase.from("guide_steps").update(form).eq("id", form.id);
-    else await supabase.from("guide_steps").insert(form);
+    if (form.id) await panelDb.from("guide_steps").update(form).eq("id", form.id);
+    else await panelDb.from("guide_steps").insert(form);
     setForm(empty);
     await refresh("guide_steps");
   };
@@ -1838,7 +1850,7 @@ function GuideTab() {
               <button
                 className={btnGhost}
                 onClick={async () => {
-                  await supabase.from("guide_steps").delete().eq("id", s.id);
+                  await panelDb.from("guide_steps").delete().eq("id", s.id);
                   await refresh("guide_steps");
                 }}
               >
@@ -2087,7 +2099,7 @@ function ImportTab() {
         return { ...p, agent_links: links, display_order: i };
       });
       for (let i = 0; i < rows.length; i += 200) {
-        const { error } = await supabase.from("products").insert(rows.slice(i, i + 200));
+        const { error } = await panelDb.from("products").insert(rows.slice(i, i + 200));
         if (error) throw error;
       }
       await refresh("products");

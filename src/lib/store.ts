@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getPanelToken } from "@/lib/panelToken";
 import { uploadImage } from "@/lib/secure.functions";
 
 export type Agent = {
@@ -101,7 +102,7 @@ export type Seller = {
   id: string;
   name: string;
   slug: string;
-  username: string;
+  username?: string;
   logo_url: string | null;
   banner_url: string | null;
   description: string;
@@ -122,7 +123,7 @@ export type GuideStep = {
 export type Settings = Record<string, string>;
 
 const SELLER_COLUMNS =
-  "id, name, slug, username, logo_url, banner_url, description, active, external_url, link_mode";
+  "id, name, slug, logo_url, banner_url, description, active, external_url, link_mode";
 
 export const useSellers = () =>
   useQuery({
@@ -146,6 +147,7 @@ export async function uploadImages(files: File[], folder = "uploads"): Promise<s
     }
     const { url } = await uploadImage({
       data: {
+        token: getPanelToken(),
         folder,
         ext,
         contentType: file.type || "image/jpeg",
@@ -266,8 +268,9 @@ export function useRefresh() {
 }
 
 export async function saveSetting(key: string, value: string) {
-  const { error } = await supabase.from("settings").upsert({ key, value });
-  if (error) throw error;
+  const { panelDb } = await import("@/lib/panelDb");
+  const { error } = await panelDb.from("settings").upsert({ key, value });
+  if (error) throw new Error(error);
 }
 
 /** Parse a comma-separated string into a clean list of values. */
