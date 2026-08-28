@@ -254,7 +254,7 @@ function BrandingTab() {
   }, [data]);
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-4 text-lg font-bold">Branding</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Social media dodajesz wyłącznie poniżej w „Socialne (dynamiczne)” — nic nie pojawia się tam
@@ -506,7 +506,7 @@ function PromosTab() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">
             {form.id ? "Edytuj promocję" : "Dodaj promocję / ogłoszenie sklepu"}
           </h2>
@@ -549,7 +549,7 @@ function PromosTab() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">Promocje</h2>
           <ul className="space-y-2">
             {(promos ?? []).map((pr) => (
@@ -624,7 +624,7 @@ function ShippingTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-1 text-lg font-bold">
           {form.id ? "Edytuj linię wysyłkową" : "Dodaj linię wysyłkową"}
         </h2>
@@ -786,7 +786,7 @@ function ShippingTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Stawki wysyłek</h2>
         <ul className="space-y-2">
           {(rates ?? []).map((r) => (
@@ -864,7 +864,7 @@ function AgentsTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">{form.id ? "Edytuj agenta" : "Dodaj agenta"}</h2>
         <div className="space-y-3">
           <input
@@ -916,7 +916,7 @@ function AgentsTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Agenci</h2>
         <ul className="space-y-2">
           {(agents ?? []).map((a) => (
@@ -979,7 +979,7 @@ function CategoriesTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-4 text-lg font-bold">Zarządzanie kategoriami</h2>
       <div className="flex gap-2">
         <input
@@ -1226,7 +1226,7 @@ function ProductsTab() {
   return (
     <section className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">
             {form.id ? "Edytuj produkt" : "Dodaj produkt"}
           </h2>
@@ -1473,13 +1473,13 @@ function ProductsTab() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
           <h2 className="mb-4 text-lg font-bold">Podgląd na żywo</h2>
           <ProductCard product={preview} />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-1 text-lg font-bold">Wszystkie produkty</h2>
         <p className="mb-3 text-xs text-muted-foreground">
           Przeciągnij kafelek myszką (uchwyt ⠿), aby zmienić kolejność — zapisuje się od razu.
@@ -1664,7 +1664,7 @@ function SellersTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">
           {form.id ? "Edytuj sprzedawcę" : "Dodaj sprzedawcę"}
         </h2>
@@ -1745,7 +1745,7 @@ function SellersTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Sprzedawcy</h2>
         <ul className="space-y-2">
           {(sellers ?? []).map((s) => (
@@ -1816,7 +1816,7 @@ function GuideTab() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">{form.id ? "Edytuj krok" : "Dodaj krok"}</h2>
         <div className="space-y-3">
           <input
@@ -1865,7 +1865,7 @@ function GuideTab() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
         <h2 className="mb-4 text-lg font-bold">Kroki poradnika</h2>
         <ul className="space-y-2">
           {(steps ?? []).map((s) => (
@@ -2060,7 +2060,7 @@ function LangTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-1 text-lg font-bold">Języki (PL / EN)</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Ustaw własne teksty dla obu wersji językowych — nagłówki, nawigacja i nazwy kategorii.
@@ -2155,7 +2155,7 @@ function ImportTab() {
   };
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-6">
+    <section className="rounded-3xl border border-border bg-surface p-6 shadow-lg shadow-black/20">
       <h2 className="mb-1 text-lg font-bold">Szybki import produktów</h2>
       <p className="mb-4 text-xs text-muted-foreground">
         Kolumny (nagłówek pierwszego wiersza): <b>title, category, price, price_cny, image_url,
