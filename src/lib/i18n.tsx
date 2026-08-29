@@ -59,6 +59,75 @@ export const DICT: Record<string, { pl: string; en: string }> = {
     en: "Shoes, pants, top and accessories in one roll, priced in PLN, USD and CNY.",
   },
   "home.outfitCta": { pl: "Losuj outfit →", en: "Roll outfit →" },
+
+  "guide.title1": { pl: "Poradnik", en: "Guides" },
+  "guide.title2": { pl: "& Narzędzia", en: "& Tools" },
+  "guide.subtitle": {
+    pl: "Najpierw narzędzia, na dole pełne poradniki krok po kroku.",
+    en: "Tools first, full step-by-step guides below.",
+  },
+  "guide.trackTitle": { pl: "📦 Śledzenie paczek", en: "📦 Package tracking" },
+  "guide.trackDesc": {
+    pl: "Standardowa dostawa 7–12 dni roboczych.",
+    en: "Standard delivery 7–12 business days.",
+  },
+  "guide.trackPlaceholder": { pl: "Numer przesyłki", en: "Tracking number" },
+  "guide.trackCta": { pl: "Sprawdź status", en: "Check status" },
+  "guide.trackResult": {
+    pl: "w tranzycie, szacowana dostawa 7–12 dni.",
+    en: "in transit, estimated delivery 7–12 days.",
+  },
+  "guide.parcel": { pl: "Paczka", en: "Parcel" },
+  "guide.qcTitle": { pl: "🔍 QC Inspector / Finder", en: "🔍 QC Inspector / Finder" },
+  "guide.qcDesc": {
+    pl: "Wklej ID lub link produktu, aby otworzyć zdjęcia QC.",
+    en: "Paste a product ID or link to open QC photos.",
+  },
+  "guide.qcPlaceholder": { pl: "ID produktu lub link", en: "Product ID or link" },
+  "guide.qcCta": { pl: "Znajdź zdjęcia QC", en: "Find QC photos" },
+  "guide.convTitle": { pl: "Link Converter", en: "Link Converter" },
+  "guide.convDesc": {
+    pl: "Wklej link z 1688 / Taobao / Weidian albo gotowy link agenta (USFANS, Kakobuy, Litbuy…) — zamienimy go na link u wybranego agenta.",
+    en: "Paste a 1688 / Taobao / Weidian link or an existing agent link (USFANS, Kakobuy, Litbuy…) — we convert it for your agent of choice.",
+  },
+  "guide.convPlaceholder": {
+    pl: "https://detail.1688.com/offer/123456789.html lub link agenta",
+    en: "https://detail.1688.com/offer/123456789.html or an agent link",
+  },
+  "guide.convInvalid": {
+    pl: "Nie rozpoznano linku produktu — obsługujemy Weidian, 1688, Taobao oraz linki agentów. Oryginalny link pozostaje bez zmian.",
+    en: "Product link not recognised — we support Weidian, 1688, Taobao and agent links. The original link stays unchanged.",
+  },
+  "guide.source": { pl: "Źródło:", en: "Source:" },
+  "guide.openIn": { pl: "Otwórz w", en: "Open in" },
+  "guide.copy": { pl: "Kopiuj", en: "Copy" },
+  "guide.stepsTitle1": { pl: "Poradniki", en: "Guides" },
+  "guide.stepsTitle2": { pl: "krok po kroku", en: "step by step" },
+  "guide.stepsSubtitle": {
+    pl: "Poradnik Zamawiania · Poradnik Śledzenia Paczki · Poradnik Używania",
+    en: "Ordering guide · Package tracking guide · Usage guide",
+  },
+  "guide.step": { pl: "Krok", en: "Step" },
+
+  "calc.kicker": { pl: "Kalkulator wagi", en: "Weight calculator" },
+  "calc.title": {
+    pl: "Ile zapłacisz za wysyłkę haulu?",
+    en: "How much will your haul shipping cost?",
+  },
+  "calc.range": { pl: "Minimum 0.5 kg, maksimum 25 kg.", en: "Minimum 0.5 kg, maximum 25 kg." },
+  "calc.kilograms": { pl: "kilogramy", en: "kilograms" },
+  "calc.less": { pl: "Mniej", en: "Less" },
+  "calc.more": { pl: "Więcej", en: "More" },
+  "calc.weightAria": { pl: "Waga paczki w kg", en: "Parcel weight in kg" },
+  "calc.prices": { pl: "Ceny:", en: "Prices:" },
+  "calc.withCoupons": { pl: "Z kuponami", en: "With coupons" },
+  "calc.withoutCoupons": { pl: "Bez kuponów", en: "Without coupons" },
+  "calc.empty": {
+    pl: "Brak zdefiniowanych stawek wysyłki dla tej wagi.",
+    en: "No shipping rates defined for this weight.",
+  },
+  "calc.cheapest": { pl: "Najtańsza opcja", en: "Cheapest option" },
+  "calc.code": { pl: "kod", en: "code" },
 };
 
 export const DICT_KEYS = Object.keys(DICT);
