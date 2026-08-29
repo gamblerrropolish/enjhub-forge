@@ -8,12 +8,14 @@ import {
   usdFromPln,
   type ShippingRate,
 } from "@/lib/store";
+import { useLang } from "@/lib/i18n";
 
 const MIN_KG = 0.5;
 const MAX_KG = 25;
 
 /** Weight-based shipping comparison across agents, driven by admin-managed rates. */
 export function HaulCalculator() {
+  const { t } = useLang();
   const { data: rates } = useShippingRates();
   const { data: agents } = useAgents();
   const [kg, setKg] = useState(2);
@@ -43,16 +45,16 @@ export function HaulCalculator() {
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
         <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">
-            Kalkulator wagi
+            {t("calc.kicker")}
           </p>
-          <h2 className="mt-1 text-xl font-black">Ile zapłacisz za wysyłkę haulu?</h2>
+          <h2 className="mt-1 text-xl font-black">{t("calc.title")}</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Minimum {MIN_KG} kg, maksimum {MAX_KG} kg.
+            {t("calc.range")}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
-            aria-label="Mniej"
+            aria-label={t("calc.less")}
             onClick={() => setKg((v) => clamp(v - 0.5))}
             className="h-10 w-10 rounded-xl border border-border text-lg font-bold text-muted-foreground transition-all hover:border-primary hover:text-primary"
           >
@@ -61,11 +63,11 @@ export function HaulCalculator() {
           <div className="rounded-2xl border border-primary/40 bg-secondary/60 px-5 py-2 text-center glow-ring">
             <p className="font-display text-3xl font-black text-gradient-brand">{kg.toFixed(1)}</p>
             <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-              kilogramy
+              {t("calc.kilograms")}
             </p>
           </div>
           <button
-            aria-label="Więcej"
+            aria-label={t("calc.more")}
             onClick={() => setKg((v) => clamp(v + 0.5))}
             className="h-10 w-10 rounded-xl border border-border text-lg font-bold text-muted-foreground transition-all hover:border-primary hover:text-primary"
           >
@@ -81,7 +83,7 @@ export function HaulCalculator() {
           max={MAX_KG}
           step={0.5}
           value={kg}
-          aria-label="Waga paczki w kg"
+          aria-label={t("calc.weightAria")}
           onChange={(e) => setKg(Number(e.target.value))}
           className="range-brand w-full cursor-pointer"
           style={{
@@ -113,11 +115,11 @@ export function HaulCalculator() {
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <span className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-          Ceny:
+          {t("calc.prices")}
         </span>
         {[
-          { on: true, label: "Z kuponami" },
-          { on: false, label: "Bez kuponów" },
+          { on: true, label: t("calc.withCoupons") },
+          { on: false, label: t("calc.withoutCoupons") },
         ].map((opt) => (
           <button
             key={String(opt.on)}
@@ -135,7 +137,7 @@ export function HaulCalculator() {
 
       {results.length === 0 ? (
         <p className="mt-5 rounded-xl border border-border bg-secondary/50 p-5 text-center text-xs text-muted-foreground">
-          Brak zdefiniowanych stawek wysyłki dla tej wagi.
+          {t("calc.empty")}
         </p>
       ) : (
         <ul className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -164,7 +166,7 @@ export function HaulCalculator() {
                   <p className="truncate text-[11px] text-muted-foreground">{rate.line_name}</p>
                   {best ? (
                     <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
-                      Najtańsza opcja
+                      {t("calc.cheapest")}
                     </p>
                   ) : null}
                 </div>
@@ -177,7 +179,7 @@ export function HaulCalculator() {
                   ) : null}
                   <p className="text-[11px] text-muted-foreground">≈ ${money(usdFromPln(cost))}</p>
                   {withCoupons && rate.coupon_code ? (
-                    <p className="text-[11px] font-bold text-primary">kod {rate.coupon_code}</p>
+                    <p className="text-[11px] font-bold text-primary">{t("calc.code")} {rate.coupon_code}</p>
                   ) : null}
                 </div>
               </li>
