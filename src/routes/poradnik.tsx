@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAgents, useGuideSteps, useSettings } from "@/lib/store";
 import { HaulCalculator } from "@/components/HaulCalculator";
 import { convertLink, extractSourceLink } from "@/lib/linkConverter";
+import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/poradnik")({
   head: () => ({
@@ -29,24 +30,25 @@ const field =
 const cta = "mt-3 w-full rounded-lg gradient-brand px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-surface-deep";
 
 function PackageTracker() {
+  const { t } = useLang();
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<string | null>(null);
 
   return (
     <div className={card}>
-      <h3 className="text-base font-bold">📦 Śledzenie paczek</h3>
-      <p className="mt-1 text-xs text-muted-foreground">Standardowa dostawa 7–12 dni roboczych.</p>
+      <h3 className="text-base font-bold">{t("guide.trackTitle")}</h3>
+      <p className="mt-1 text-xs text-muted-foreground">{t("guide.trackDesc")}</p>
       <input
         className={`${field} mt-3`}
-        placeholder="Numer przesyłki"
+        placeholder={t("guide.trackPlaceholder")}
         value={code}
         onChange={(e) => setCode(e.target.value)}
       />
       <button
         className={cta}
-        onClick={() => setStatus(code.trim() ? `Paczka ${code.trim()} — w tranzycie, szacowana dostawa 7–12 dni.` : null)}
+        onClick={() => setStatus(code.trim() ? `${t("guide.parcel")} ${code.trim()} — ${t("guide.trackResult")}` : null)}
       >
-        Sprawdź status
+        {t("guide.trackCta")}
       </button>
       {status ? <p className="mt-3 text-xs text-brand-cyan">{status}</p> : null}
       <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
@@ -67,18 +69,19 @@ function PackageTracker() {
 }
 
 function QcInspector() {
+  const { t } = useLang();
   const [id, setId] = useState("");
   const link = id.trim() ? `https://cnfans.com/qc?id=${encodeURIComponent(id.trim())}` : "";
 
   return (
     <div className={card}>
-      <h3 className="text-base font-bold">🔍 QC Inspector / Finder</h3>
+      <h3 className="text-base font-bold">{t("guide.qcTitle")}</h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        Wklej ID lub link produktu, aby otworzyć zdjęcia QC.
+        {t("guide.qcDesc")}
       </p>
       <input
         className={`${field} mt-3`}
-        placeholder="ID produktu lub link"
+        placeholder={t("guide.qcPlaceholder")}
         value={id}
         onChange={(e) => setId(e.target.value)}
       />
@@ -89,13 +92,14 @@ function QcInspector() {
         aria-disabled={!link}
         className={`${cta} block text-center ${link ? "" : "pointer-events-none opacity-50"}`}
       >
-        Znajdź zdjęcia QC
+        {t("guide.qcCta")}
       </a>
     </div>
   );
 }
 
 function LinkConverter() {
+  const { t } = useLang();
   const { data: agents } = useAgents();
   const { data: settings } = useSettings();
   const [url, setUrl] = useState("");
@@ -110,29 +114,27 @@ function LinkConverter() {
 
   return (
     <div className={card}>
-      <h3 className="text-base font-bold">Link Converter</h3>
+      <h3 className="text-base font-bold">{t("guide.convTitle")}</h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        Wklej link z 1688 / Taobao / Weidian albo gotowy link agenta (USFANS, Kakobuy, Litbuy…) —
-        zamienimy go na link u wybranego agenta.
+        {t("guide.convDesc")}
       </p>
       <input
         className={`${field} mt-3`}
-        placeholder="https://detail.1688.com/offer/123456789.html lub link agenta"
+        placeholder={t("guide.convPlaceholder")}
         value={url}
         onChange={(e) => setUrl(e.target.value)}
       />
 
       {invalid ? (
         <p className="mt-3 text-[11px] text-destructive">
-          Nie rozpoznano linku produktu — obsługujemy Weidian, 1688, Taobao oraz linki agentów.
-          Oryginalny link pozostaje bez zmian.
+          {t("guide.convInvalid")}
         </p>
       ) : null}
 
       {source ? (
         <>
           <p className="mt-3 break-all rounded-lg border border-border bg-secondary px-2 py-1.5 text-[11px] text-muted-foreground">
-            Źródło: <span className="text-brand-cyan">{source.url}</span>
+            {t("guide.source")} <span className="text-brand-cyan">{source.url}</span>
           </p>
           <div className="mt-3 space-y-2">
             {list.map((a) => {
@@ -148,7 +150,7 @@ function LinkConverter() {
                     {a.avatar_url ? (
                       <img src={a.avatar_url} alt="" className="h-4 w-4 rounded-full object-cover" />
                     ) : null}
-                    Otwórz w {a.name}
+                    {t("guide.openIn")} {a.name}
                   </a>
                   <button
                     className="rounded-lg border border-border px-2 py-2 text-[11px] font-semibold hover:border-primary hover:text-primary"
@@ -158,7 +160,7 @@ function LinkConverter() {
                       setTimeout(() => setCopied(""), 1500);
                     }}
                   >
-                    {copied === a.id ? "OK" : "Kopiuj"}
+                    {copied === a.id ? "OK" : t("guide.copy")}
                   </button>
                 </div>
               );
@@ -173,15 +175,16 @@ function LinkConverter() {
 
 
 function PoradnikPage() {
+  const { t } = useLang();
   const { data: steps } = useGuideSteps();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="text-3xl font-black">
-        Poradnik <span className="text-gradient-brand">&amp; Narzędzia</span>
+        {t("guide.title1")} <span className="text-gradient-brand">{t("guide.title2")}</span>
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Najpierw narzędzia, na dole pełne poradniki krok po kroku.
+        {t("guide.subtitle")}
       </p>
 
       <section className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -196,10 +199,10 @@ function PoradnikPage() {
 
       <section className="mt-14">
         <h2 className="text-2xl font-black">
-          Poradniki <span className="text-gradient-brand">krok po kroku</span>
+          {t("guide.stepsTitle1")} <span className="text-gradient-brand">{t("guide.stepsTitle2")}</span>
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Poradnik Zamawiania · Poradnik Śledzenia Paczki · Poradnik Używania
+          {t("guide.stepsSubtitle")}
         </p>
 
         <div className="mt-6 space-y-5">
@@ -213,7 +216,7 @@ function PoradnikPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-bold">
-                  Krok {s.step_number}: {s.title}
+                  {t("guide.step")} {s.step_number}: {s.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {s.description}
