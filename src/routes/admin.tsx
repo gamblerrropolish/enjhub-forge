@@ -1051,6 +1051,7 @@ function ProductsTab() {
     display_order: 0,
     promoted: false,
     for_women: false,
+    verified: false,
     likes: 0,
     dislikes: 0,
     views: 0,
@@ -1185,6 +1186,7 @@ function ProductsTab() {
       display_order: Number(form.display_order) || 0,
       promoted: form.promoted,
       for_women: form.for_women,
+      verified: form.verified,
       price_cny: Math.round(cnyFromPln(Number(form.price) || 0) * 100) / 100,
       likes: Number(form.likes) || 0,
       dislikes: Number(form.dislikes) || 0,
@@ -1201,6 +1203,7 @@ function ProductsTab() {
 
   const preview: Product = {
     id: "preview",
+    verified: form.verified,
     title: form.title || "Nazwa produktu",
     category: form.category,
     price: Number(form.price) || 0,
@@ -1396,23 +1399,13 @@ function ProductsTab() {
             Statystyki (tylko Super Admin)
           </h3>
           <div className="mt-2 grid gap-3 sm:grid-cols-4">
-            <label className="text-xs font-semibold text-muted-foreground">
-              👍 Polubienia
+            <label className="flex items-end gap-2 text-xs font-semibold text-muted-foreground">
               <input
-                className={`${input} mt-1`}
-                type="number"
-                value={form.likes}
-                onChange={(e) => setForm({ ...form, likes: Number(e.target.value) })}
+                type="checkbox"
+                checked={form.verified}
+                onChange={(e) => setForm({ ...form, verified: e.target.checked })}
               />
-            </label>
-            <label className="text-xs font-semibold text-muted-foreground">
-              👎 Dyslajki
-              <input
-                className={`${input} mt-1`}
-                type="number"
-                value={form.dislikes}
-                onChange={(e) => setForm({ ...form, dislikes: Number(e.target.value) })}
-              />
+              🛡 Zweryfikowany
             </label>
             <label className="text-xs font-semibold text-muted-foreground">
               👁 Wyświetlenia
@@ -1576,6 +1569,7 @@ function ProductsTab() {
                     display_order: p.display_order ?? 0,
                     promoted: p.promoted,
                     for_women: p.for_women,
+                    verified: p.verified,
                     likes: p.likes,
                     dislikes: p.dislikes,
                     views: p.views,

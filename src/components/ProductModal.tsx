@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PriceTags, QualityBadges } from "@/components/PriceTags";
+import { PriceTags, QualityBadges, VerifiedBadge } from "@/components/PriceTags";
 import type { Agent, Product } from "@/lib/store";
 
 /** Interactive shopping modal: pick colorway + size, then buy through an agent. */
@@ -34,7 +34,10 @@ export function ProductModal({
         className="my-8 w-full max-w-3xl overflow-hidden rounded-3xl border border-border bg-surface glow-ring"
       >
         <div className="flex items-start justify-between gap-4 border-b border-border p-5">
-          <h2 className="text-lg font-bold">{product.title}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-lg font-bold">{product.title}</h2>
+            {product.verified ? <VerifiedBadge /> : null}
+          </div>
           <button
             aria-label="Zamknij"
             onClick={onClose}

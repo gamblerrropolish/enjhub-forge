@@ -40,6 +40,8 @@ export type Product = {
   promoted: boolean;
   /** Girl Zone — produkt oznaczony jako damski. */
   for_women: boolean;
+  /** Produkt zweryfikowany — plakietka na karcie. */
+  verified: boolean;
   store_url: string;
   store_name: string;
 };
@@ -77,7 +79,10 @@ export type ShippingRate = {
   discount_percent: number;
   /** Nazwa / kod kuponu pokazywany użytkownikowi. */
   coupon_code: string;
+  /** Link rejestracyjny (ref) agenta — kafelek w kalkulatorze prowadzi tutaj. */
+  signup_url: string;
 };
+
 
 
 /** Fixed conversion rates used across the catalog. */
@@ -232,6 +237,7 @@ export const useProducts = () =>
           price_cny: Number(p.price_cny ?? 0),
           promoted: Boolean(p.promoted),
           for_women: Boolean((p as { for_women?: boolean }).for_women),
+          verified: Boolean((p as { verified?: boolean }).verified),
           store_url: p.store_url ?? "",
           store_name: p.store_name ?? "",
         };
@@ -420,6 +426,7 @@ export const useShippingRates = () =>
         price_table: (r.price_table ?? {}) as Record<string, number>,
         discount_percent: Number(r.discount_percent ?? 0),
         coupon_code: r.coupon_code ?? "",
+        signup_url: (r as { signup_url?: string }).signup_url ?? "",
       })) as ShippingRate[];
     },
   });
