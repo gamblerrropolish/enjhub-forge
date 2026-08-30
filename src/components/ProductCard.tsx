@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { voteProduct } from "@/lib/secure.functions";
-import { PriceTags, QualityBadges } from "@/components/PriceTags";
+import { PriceTags, QualityBadges, VerifiedBadge } from "@/components/PriceTags";
 import type { Product } from "@/lib/store";
 
 /**
- * Lightweight grid card: single image + engagement, title, category, badges,
+ * Lightweight grid card: single image + views, title, category, badges,
  * price and a "Sprawdź" CTA. Colorways / sizes / agent links live in the modal.
  */
 export function ProductCard({
@@ -14,16 +13,7 @@ export function ProductCard({
   product: Product;
   onDetails?: (p: Product) => void;
 }) {
-  const [likes, setLikes] = useState(product.likes);
-  const [dislikes, setDislikes] = useState(product.dislikes);
   const [wish, setWish] = useState(false);
-
-  const vote = async (kind: "likes" | "dislikes") => {
-    const next = kind === "likes" ? likes + 1 : dislikes + 1;
-    if (kind === "likes") setLikes(next);
-    else setDislikes(next);
-    await voteProduct({ data: { productId: product.id, kind } }).catch(() => null);
-  };
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all hover:-translate-y-1 hover:border-primary/60 hover:glow-ring">
@@ -51,26 +41,9 @@ export function ProductCard({
           <span className={wish ? "text-primary" : "text-muted-foreground"}>♥</span>
         </button>
 
-        <div className="absolute left-2 top-2 flex flex-col gap-1">
-          <button
-            aria-label="Lubię to"
-            onClick={() => void vote("likes")}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-deep/70 text-sm backdrop-blur transition-all hover:border-primary hover:glow-ring"
-          >
-            👍
-          </button>
-          <button
-            aria-label="Nie lubię"
-            onClick={() => void vote("dislikes")}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-deep/70 text-sm backdrop-blur transition-all hover:border-primary hover:glow-ring"
-          >
-            👎
-          </button>
-        </div>
+        {product.verified ? <VerifiedBadge className="absolute left-2 top-2" /> : null}
 
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-surface-deep/80 px-3 py-1.5 text-[11px] text-muted-foreground backdrop-blur">
-          <span>👍 {likes}</span>
-          <span>👎 {dislikes}</span>
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-end bg-surface-deep/80 px-3 py-1.5 text-[11px] text-muted-foreground backdrop-blur">
           <span>👁 {product.views}</span>
         </div>
       </div>
