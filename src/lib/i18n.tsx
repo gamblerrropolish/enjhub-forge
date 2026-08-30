@@ -128,6 +128,41 @@ export const DICT: Record<string, { pl: string; en: string }> = {
   },
   "calc.cheapest": { pl: "Najtańsza opcja", en: "Cheapest option" },
   "calc.code": { pl: "kod", en: "code" },
+  "calc.signup": { pl: "Zarejestruj się \u2192", en: "Sign up \u2192" },
+
+  "promos.title1": { pl: "Aktualne", en: "Current" },
+  "promos.title2": { pl: "promocje", en: "deals" },
+  "promos.subtitle": {
+    pl: "Sklepy i produkty z aktywnymi przecenami \u2014 dodawane na bie\u017c\u0105co.",
+    en: "Stores and products with active discounts \u2014 updated regularly.",
+  },
+  "promos.empty": {
+    pl: "Brak aktywnych promocji. Zajrzyj p\u00f3\u017aniej.",
+    en: "No active deals right now. Check back later.",
+  },
+  "promos.cta": { pl: "Sprawd\u017a promocj\u0119 \u2192", en: "View deal \u2192" },
+
+  "agents.title1": { pl: "Zaufani", en: "Trusted" },
+  "agents.title2": { pl: "agenci", en: "agents" },
+  "agents.subtitle": {
+    pl: "Wybierz agenta, przez kt\u00f3rego chcesz robi\u0107 zakupy \u2014 poni\u017cej aktualne kupony i bonusy.",
+    en: "Pick the agent you want to buy through \u2014 current coupons and bonuses below.",
+  },
+  "agents.discord": { pl: "Do\u0142\u0105cz na Discord", en: "Join our Discord" },
+  "agents.limited": { pl: "Limitowana oferta", en: "Limited offer" },
+  "agents.offer": { pl: "$450 w kuponach + 40% zni\u017cki", en: "$450 in coupons + 40% off" },
+  "agents.useCode1": { pl: "U\u017cyj kodu", en: "Use code" },
+  "agents.useCode2": { pl: "przy rejestracji.", en: "when signing up." },
+  "agents.cardCta": {
+    pl: "Zarejestruj si\u0119 i odbierz kupony",
+    en: "Sign up and claim your coupons",
+  },
+
+  "stores.title1": { pl: "Sklepy", en: "Seller" },
+  "stores.title2": { pl: "sprzedawc\u00f3w", en: "stores" },
+  "stores.empty": { pl: "Brak aktywnych sklep\u00f3w.", en: "No active stores." },
+  "stores.products": { pl: "produkt\u00f3w", en: "products" },
+  "stores.enter": { pl: "Wejd\u017a \u2192", en: "Enter \u2192" },
 };
 
 export const DICT_KEYS = Object.keys(DICT);
