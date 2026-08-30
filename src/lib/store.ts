@@ -79,7 +79,10 @@ export type ShippingRate = {
   discount_percent: number;
   /** Nazwa / kod kuponu pokazywany użytkownikowi. */
   coupon_code: string;
+  /** Link rejestracyjny (ref) agenta — kafelek w kalkulatorze prowadzi tutaj. */
+  signup_url: string;
 };
+
 
 
 /** Fixed conversion rates used across the catalog. */
