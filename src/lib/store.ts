@@ -237,6 +237,7 @@ export const useProducts = () =>
           price_cny: Number(p.price_cny ?? 0),
           promoted: Boolean(p.promoted),
           for_women: Boolean((p as { for_women?: boolean }).for_women),
+          verified: Boolean((p as { verified?: boolean }).verified),
           store_url: p.store_url ?? "",
           store_name: p.store_name ?? "",
         };
