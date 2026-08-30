@@ -1201,6 +1201,7 @@ function ProductsTab() {
 
   const preview: Product = {
     id: "preview",
+    verified: form.verified,
     title: form.title || "Nazwa produktu",
     category: form.category,
     price: Number(form.price) || 0,

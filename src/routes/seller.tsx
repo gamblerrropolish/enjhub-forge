@@ -281,6 +281,7 @@ function SellerProducts({ seller }: { seller: Seller }) {
   const preview: Product = {
     id: "preview",
     for_women: false,
+    verified: false,
     title: form.title || "Nazwa produktu",
     category: form.category,
     price: Number(form.price) || 0,
