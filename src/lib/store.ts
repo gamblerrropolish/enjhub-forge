@@ -40,6 +40,8 @@ export type Product = {
   promoted: boolean;
   /** Girl Zone — produkt oznaczony jako damski. */
   for_women: boolean;
+  /** Produkt zweryfikowany — plakietka na karcie. */
+  verified: boolean;
   store_url: string;
   store_name: string;
 };
