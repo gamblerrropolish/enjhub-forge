@@ -426,6 +426,7 @@ export const useShippingRates = () =>
         price_table: (r.price_table ?? {}) as Record<string, number>,
         discount_percent: Number(r.discount_percent ?? 0),
         coupon_code: r.coupon_code ?? "",
+        signup_url: (r as { signup_url?: string }).signup_url ?? "",
       })) as ShippingRate[];
     },
   });
